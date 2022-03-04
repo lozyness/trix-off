@@ -9,7 +9,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import RandomRoller from 'react-random-roller';
+import Tricks from "./Tricks";
 
 const theme = createTheme();
 
@@ -51,9 +51,6 @@ export default function Album() {
                         <Typography variant="h5" align="center" color="text.secondary" paragraph>
                             Lets Go!
                         </Typography>
-                        <Typography variant="h6" align="center" color="text.secondary" paragraph>
-                            This weeks trick: <RandomRoller message={"Sit Pretty"}/>
-                        </Typography>
                         <Stack
                             sx={{ pt: 4 }}
                             direction="row"
@@ -65,6 +62,7 @@ export default function Album() {
                         </Stack>
                     </Container>
                 </Box>
+                <Tricks />
             </main>
             {/* End footer */}
         </ThemeProvider>
