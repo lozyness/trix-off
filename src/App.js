@@ -49,12 +49,12 @@ const App = () => {
     useEffect(() => {
         let selectNextTimer;
         if (selecting) {
-            selectNextTimer = setTimeout(() => {
+            selectNextTimer = setInterval(() => {
                 selectNextTrick();
             }, 150);
         }
         return () => {
-            clearTimeout(selectNextTimer);
+            clearInterval(selectNextTimer);
         }
     }, [selectedTrick, selecting])
 
