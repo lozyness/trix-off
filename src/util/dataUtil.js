@@ -1,35 +1,11 @@
 import faunadb, {query} from "faunadb";
-import trickData from "../tricks.json";
-import difficultyData from "../difficulties.json";
 
 const client = new faunadb.Client({
     secret: 'fnAEg3KFzfAAwaCxuo_V9OZ3IAFE4Lsb8xgT-Hx4',
     domain: "db.eu.fauna.com"
 });
 
-
-export default {
-    initialiseData: () => {
-        client.query(
-            query.Map(
-                difficultyData,
-                query.Lambda(
-                    'difficulty',
-                    query.Create(
-                        query.Collection('difficulties'),
-                        {data: query.Var('difficulty')}
-                    )
-                )
-            )
-        )
-            .then((ret) => console.log(ret))
-            .catch((err) => console.error(
-                'Error: [%s] %s: %s',
-                err.name,
-                err.message,
-                err.errors()[0].description,
-            ))
-    },
+const dataUtil = {
     deleteData: () => {
         client.query(
             query.Paginate(
@@ -170,3 +146,5 @@ export default {
         )
     }
 }
+
+export default dataUtil;

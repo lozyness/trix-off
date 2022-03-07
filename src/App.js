@@ -13,6 +13,8 @@ import Nav from "./Nav";
 import dataUtil from "./util/dataUtil";
 import Loading from "./Loading";
 import Chip from "@mui/material/Chip";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 const theme = createTheme();
 
@@ -41,7 +43,7 @@ const App = () => {
     }, [selecting])
 
     const selectNextTrick = () => {
-        setSelectedTrick(tricks[Math.floor(Math.random() * tricks.length)])
+        setSelectedTrick(() => tricks[Math.floor(Math.random() * tricks.length)])
     }
 
     useEffect(() => {
@@ -54,7 +56,7 @@ const App = () => {
         return () => {
             clearTimeout(selectNextTimer);
         }
-    }, [selectedTrick])
+    }, [selectedTrick, selecting])
 
     const displaySelected = () => {
         dataUtil.loadSelectedTrick().then((data) => {
@@ -75,7 +77,7 @@ const App = () => {
         dataUtil.levels()
             .then((difficulties) => {
                 console.log("Retrieved levels");
-                difficulties.map((difficulty) => {
+                difficulties.forEach((difficulty) => {
                     dataUtil.tricksByDifficulty(difficulty)
                         .then((newTricks) => {
                             console.log("Retrieved tricks for level: " + difficulty);
@@ -84,13 +86,15 @@ const App = () => {
                             ))
                             setTricks((tricks) => [...tricks, ...converted]);
                         }).catch((err) => {
-                        console.error(err.name + ": " + err.message);
-                        setError(err.name + ": " + err.message);
+                            setError(err.name + ": " + err.message);
                     })
                 })
             })
             .then(() => {
                 displaySelected()
+            })
+            .catch((err) => {
+                setError(err.name + ": " + err.message);
             })
             .finally(() => {
                 setLoading(false);
@@ -183,6 +187,11 @@ const App = () => {
                 </Container>
 
             </div>
+            <Snackbar open={error} autoHideDuration={6000} onClose={() => setError(null)}>
+                <Alert onClose={() => setError(null)} severity="error" sx={{ width: '100%' }}>
+                    {error}
+                </Alert>
+            </Snackbar>
             {/* End footer */}
         </ThemeProvider>
     );
