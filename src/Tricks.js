@@ -42,24 +42,22 @@ const Tricks = () => {
     const [error, setError] = useState(null)
 
     const setTricksByDifficulty = (difficulty, tricks) => {
-
+        console.log(difficulty)
+        console.log(tricks)
     }
 
     useEffect(() => {
-
-        dataUtil.levels().then((levels) => console.log(levels))
-
-        // dataUtil.levels()
-        //     .then((difficulties) => {
-        //         difficulties.map((difficulty) => {
-        //             dataUtil.tricksByDifficulty(difficulty)
-        //             .then((tricks) => {
-        //                 setTricksByDifficulty(difficulty, tricks)
-        //             }).catch((err) => {
-        //                 setError(err.name + ": " + err.message)
-        //             })
-        //         })
-        //     })
+        dataUtil.levels()
+            .then((difficulties) => {
+                difficulties.map((difficulty) => {
+                    dataUtil.tricksByDifficulty(difficulty)
+                    .then((tricks) => {
+                        setTricksByDifficulty(difficulty, tricks)
+                    }).catch((err) => {
+                        setError(err.name + ": " + err.message)
+                    })
+                })
+            })
         // data.allTricks()
         // .then((data) => {
         //     console.log(data)
