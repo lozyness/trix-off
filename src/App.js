@@ -112,13 +112,15 @@ const App = () => {
     }
 
     const saveTrick = () => {
-        dataUtil.deleteSelected(saved[2])
+        if(saved) {
+            dataUtil.deleteSelected(saved[2]).catch(() => setError("error deleting last trick"))
+        }
         dataUtil.saveSelectedTrick(selectedTrick.name)
             .then((ret) => {
                 setSaved(ret.data);
                 displaySelected();
             })
-        .catch((err) => console.error("error saving selected trick"))
+        .catch((err) => setError("error saving selected trick"))
     }
 
     return (
