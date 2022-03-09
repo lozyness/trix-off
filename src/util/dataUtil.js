@@ -27,8 +27,10 @@ const dataUtil = {
     allTricks: () => {
         return client.query(
             query.Paginate(
-                query.Index(
-                    'all_tricks',
+                query.Match(
+                    query.Index(
+                        'all_tricks',
+                    )
                 )
             )
         ).then(res => {
@@ -36,12 +38,12 @@ const dataUtil = {
             const tricks = tricksRef.map(ref => query.Get(ref));
             return client.query(tricks)
         })
-            .catch((err) => console.error(
-                'Error: [%s] %s: %s',
-                err.name,
-                err.message,
-                err.errors()[0].description,
-            ))
+        .catch((err) => console.error(
+            'Error: [%s] %s: %s',
+            err.name,
+            err.message,
+            err.errors()[0].description,
+        ))
     },
     trickByRef: (ref) => {
         return client.query(
@@ -124,7 +126,13 @@ const dataUtil = {
                 ), {size: 1}
             )
         ).then(ret => {
-            return ret.data[0]
+            let trick = null
+            if(ret.data[0]) {
+                trick = {}
+                trick.name = ret.data[0][1]
+                trick.ref = ret.data[0][2]
+            }
+            return trick;
         })
     },
     saveSelectedTrick: (trickName) => {
@@ -137,7 +145,7 @@ const dataUtil = {
                 query.Collection('selectedTricks'),
                 { data: data },
             )
-        )
+        ).then((ret) => ret.data)
     },
     deleteSelected: (selected) => {
         console.log("Delete: " + selected)
